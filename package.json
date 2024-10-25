@@ -1,5 +1,5 @@
 {
-  "name": "myconfont",
+  "name": "miconfont",
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@9.0.2",
@@ -7,9 +7,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ListeningRift/myconfont.git"
+    "url": "git+https://github.com/ListeningRift/Miconfont.git"
   },
-  "bugs": "https://github.com/ListeningRift/myconfont/issues",
+  "bugs": "https://github.com/ListeningRift/Miconfont/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {
@@ -34,24 +34,29 @@
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
+    "prepare": "simple-git-hooks",
     "dev": "unbuild --stub",
+    "cli": "esno src/generate.ts",
     "lint": "eslint .",
-    "prepublishOnly": "nr build",
-    "release": "bumpp && npm publish",
-    "start": "esno src/index.ts",
-    "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "prepare": "simple-git-hooks"
+    "build": "unbuild",
+    "prepublishOnly": "nr build",
+    "release": "bumpp && npm publish"
+  },
+  "dependencies": {
+    "svg2ttf": "^6.0.3",
+    "svgicons2svgfont": "^14.0.2",
+    "svgo": "^3.3.2",
+    "ttf2woff": "^3.0.0",
+    "ttf2woff2": "^6.0.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.14.0",
-    "@antfu/ni": "^0.21.12",
-    "@antfu/utils": "^0.7.7",
-    "@types/lodash": "^4.17.0",
     "@types/node": "^20.12.7",
+    "@types/svg2ttf": "^5.0.3",
+    "@types/ttf2woff": "^2.0.4",
     "bumpp": "^9.4.0",
-    "eslint": "^9.0.0",
+    "eslint": "^8.57.1",
     "esno": "^4.7.0",
     "lint-staged": "^15.2.2",
     "pnpm": "^9.0.2",
@@ -67,8 +72,5 @@
   },
   "lint-staged": {
     "*": "eslint --fix"
-  },
-  "dependencies": {
-    "@types/font-carrier": "^0.3.3"
   }
 }
