@@ -1,52 +1,41 @@
+import type { Options } from './options'
 import { Buffer } from 'node:buffer'
-import { readdirSync, readFileSync, writeFile } from 'node:fs'
-import { basename, extname, join, resolve } from 'node:path'
 import { Readable } from 'node:stream'
 import svg2ttf from 'svg2ttf'
 import { SVGIcons2SVGFontStream } from 'svgicons2svgfont'
 import { optimize } from 'svgo'
 import ttf2woff from 'ttf2woff'
 import ttf2woff2 from 'ttf2woff2'
-import { DEFAULT_OPTIONS, type Options } from './options'
+import { DEFAULT_OPTIONS } from './options'
 
 const CONTENT_PREFIX = '\\'
 
 interface Metadata {
   unicode: string[]
   name: string
-  path: string
   renamed: false
 }
 
-interface SVGMetadata {
+export interface SVGMetadata {
   code: number
-  path: string
   name: string
+  content: string
 }
 
-interface FontBuffer {
+export interface FontBuffer {
   woff: Buffer
   woff2: Buffer
   ttf: Buffer
 }
 
-function getAllSvgs(input: string) {
-  return readdirSync(resolve(input)).map((file) => {
-    if (extname(file) === '.svg')
-      return join(input, file)
-    else return undefined
-  }).filter(file => file) as string[]
-}
-
-function getSvgContext(options: Options) {
-  const svgs = getAllSvgs(options.input!)
+export function getSvgContext(svgs: Record<string, string>, options: Options) {
   const svgMetadata: SVGMetadata[] = []
-  svgs.forEach((svg, index) => {
+  Object.keys(svgs).forEach((name, index) => {
     const code = options.codeStarter! + index
     svgMetadata.push({
       code,
-      path: resolve(svg),
-      name: basename(svg, extname(svg)),
+      name,
+      content: svgs[name],
     })
   })
   return svgMetadata
@@ -106,14 +95,12 @@ async function generateSvgFontBuffer(svgMetadata: SVGMetadata[], options: Option
       .on('error', reject)
     svgMetadata.forEach((item) => {
       const glyph = new Readable()
-      const content = readFileSync(item.path, 'utf-8')
-      glyph.push(optimizeSvgString(content, options.clearColor!))
+      glyph.push(optimizeSvgString(item.content, options.clearColor!))
       glyph.push(null)
 
       ;(glyph as Readable & { metadata?: Metadata }).metadata = {
         unicode: [String.fromCharCode(item.code)],
         name: item.name,
-        path: item.path,
         renamed: false,
       }
       fontStream.write(glyph)
@@ -122,7 +109,7 @@ async function generateSvgFontBuffer(svgMetadata: SVGMetadata[], options: Option
   })
 }
 
-async function getFontBuffer(svgMetadata: SVGMetadata[], options: Options) {
+export async function getFontBuffer(svgMetadata: SVGMetadata[], options: Options) {
   const svgBuffer = await generateSvgFontBuffer(svgMetadata, options)
   const ttfUint8Array = svg2ttf(svgBuffer).buffer
   const ttfBuffer = Buffer.from(ttfUint8Array)
@@ -134,7 +121,7 @@ async function getFontBuffer(svgMetadata: SVGMetadata[], options: Options) {
   }
 }
 
-function getCssString(svgMetadata: SVGMetadata[], options: Options) {
+export function getCssString(svgMetadata: SVGMetadata[], options: Options) {
   let css = `@font-face {
   font-family: "${options.name}";
   src: url('${options.name}.woff2') format('woff2'),
@@ -158,51 +145,13 @@ function getCssString(svgMetadata: SVGMetadata[], options: Options) {
   return css
 }
 
-async function writeFontFile(fontBuffer: FontBuffer, options: Options) {
-  if (options.formats?.includes('ttf')) {
-    writeFile(`${options.output}/${options.name}.ttf`, fontBuffer.ttf, (err) => {
-      if (err)
-        return console.error(err)
-
-      console.log('ttf has created successfully')
-    })
-  }
-  if (options.formats?.includes('woff')) {
-    writeFile(`${options.output}/${options.name}.woff`, fontBuffer.woff, (err) => {
-      if (err)
-        return console.error(err)
-
-      console.log('woff has created successfully')
-    })
-  }
-  if (options.formats?.includes('woff2')) {
-    writeFile(`${options.output}/${options.name}.woff2`, fontBuffer.woff2, (err) => {
-      if (err)
-        return console.error(err)
-
-      console.log('woff2 has created successfully')
-    })
-  }
-}
-
-async function writeCSSFile(cssString: string, options: Options) {
-  writeFile(resolve(`${options.output}/${options.name}.css`), cssString, (err) => {
-    if (err)
-      return console.error(err)
-
-    console.log('css has created successfully')
-  })
-}
-
-export async function generateFile(userOptions: Options = {}) {
+export async function convert(svgs: Record<string, string>, userOptions: Options = {}) {
   const options = Object.assign({}, DEFAULT_OPTIONS, userOptions)
-  const svgMetadata = getSvgContext(options)
-  const fontBuffer: FontBuffer = await getFontBuffer(svgMetadata, options)
-  writeFontFile(fontBuffer, options)
-  const cssString = getCssString(svgMetadata, options)
-  writeCSSFile(cssString, options)
+  const svgMetadatas = getSvgContext(svgs, options)
+  const fontBuffer: FontBuffer = await getFontBuffer(svgMetadatas, options)
+  const cssString = getCssString(svgMetadatas, options)
+  return {
+    fontBuffer,
+    cssString,
+  }
 }
-generateFile({
-  input: 'test/svgs',
-  output: './',
-})

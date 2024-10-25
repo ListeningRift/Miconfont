@@ -4,6 +4,10 @@
     "lib": ["ESNext"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "paths": {
+      "@/*": ["./packages/*"],
+      "@convert/*": ["./packages/convert/*"]
+    },
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,

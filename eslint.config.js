@@ -8,6 +8,7 @@ export default antfu(
     ],
   },
   {
+    files: ['packages/cli/**/*.{js,ts}'],
     rules: {
       // overrides
       'no-console': 'off',

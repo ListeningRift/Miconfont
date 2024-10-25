@@ -8,21 +8,12 @@ importers:
 
   .:
     dependencies:
-      svg2ttf:
-        specifier: ^6.0.3
-        version: 6.0.3
-      svgicons2svgfont:
-        specifier: ^14.0.2
-        version: 14.0.2
-      svgo:
-        specifier: ^3.3.2
-        version: 3.3.2
-      ttf2woff:
-        specifier: ^3.0.0
-        version: 3.0.0
-      ttf2woff2:
-        specifier: ^6.0.1
-        version: 6.0.1
+      '@miconfont/cli':
+        specifier: workspace:*
+        version: link:packages/cli
+      '@miconfont/convert':
+        specifier: workspace:*
+        version: link:packages/convert
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^3.8.0
@@ -30,12 +21,6 @@ importers:
       '@types/node':
         specifier: ^20.12.7
         version: 20.17.0
-      '@types/svg2ttf':
-        specifier: ^5.0.3
-        version: 5.0.3
-      '@types/ttf2woff':
-        specifier: ^2.0.4
-        version: 2.0.4
       bumpp:
         specifier: ^9.4.0
         version: 9.7.1
@@ -69,6 +54,40 @@ importers:
       vitest:
         specifier: ^1.5.0
         version: 1.6.0(@types/node@20.17.0)
+
+  packages/cli:
+    dependencies:
+      '@miconfont/convert':
+        specifier: workspace:*
+        version: link:../convert
+      commander:
+        specifier: ^12.1.0
+        version: 12.1.0
+
+  packages/convert:
+    dependencies:
+      svg2ttf:
+        specifier: ^6.0.3
+        version: 6.0.3
+      svgicons2svgfont:
+        specifier: ^14.0.2
+        version: 14.0.2
+      svgo:
+        specifier: ^3.3.2
+        version: 3.3.2
+      ttf2woff:
+        specifier: ^3.0.0
+        version: 3.0.0
+      ttf2woff2:
+        specifier: ^6.0.1
+        version: 6.0.1
+    devDependencies:
+      '@types/svg2ttf':
+        specifier: ^5.0.3
+        version: 5.0.3
+      '@types/ttf2woff':
+        specifier: ^2.0.4
+        version: 2.0.4
 
 packages:
 

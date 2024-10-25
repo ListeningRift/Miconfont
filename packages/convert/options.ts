@@ -6,8 +6,6 @@ export type Options = {
   codeStarter?: number
   clearColor?: boolean
   formats?: string[]
-  input?: string
-  output?: string
 } & Partial<Omit<SVGIcons2SVGFontStreamOptions, 'callback' | 'fontName' | 'log'>>
 
 export const DEFAULT_OPTIONS = {

@@ -1,0 +1,23 @@
+{
+  "name": "@miconfont/cli",
+  "type": "module",
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.0.2",
+  "description": "A cli for converting SVG icons to TTF and WOFF/WOFF2 formats",
+  "license": "MIT",
+  "main": "dist/index.cjs",
+  "bin": {
+    "miconfont": "dist/index.cjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "esno ./index.ts",
+    "build": "unbuild"
+  },
+  "dependencies": {
+    "@miconfont/convert": "workspace:*",
+    "commander": "^12.1.0"
+  }
+}
