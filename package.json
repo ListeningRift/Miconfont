@@ -51,12 +51,12 @@
     "ttf2woff2": "^6.0.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.14.0",
+    "@antfu/eslint-config": "^3.8.0",
     "@types/node": "^20.12.7",
     "@types/svg2ttf": "^5.0.3",
     "@types/ttf2woff": "^2.0.4",
     "bumpp": "^9.4.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.13.0",
     "esno": "^4.7.0",
     "lint-staged": "^15.2.2",
     "pnpm": "^9.0.2",
