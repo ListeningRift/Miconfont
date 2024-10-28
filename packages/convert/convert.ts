@@ -28,14 +28,14 @@ export interface FontBuffer {
   ttf: Buffer
 }
 
-export function getSvgContext(svgs: Record<string, string>, options: Options) {
+export function getSvgContext(svgs: Omit<SVGMetadata, 'code'>[], options: Options) {
   const svgMetadata: SVGMetadata[] = []
-  Object.keys(svgs).forEach((name, index) => {
+  svgs.forEach((item, index) => {
     const code = options.codeStarter! + index
     svgMetadata.push({
       code,
-      name,
-      content: svgs[name],
+      name: item.name,
+      content: item.content,
     })
   })
   return svgMetadata
@@ -145,7 +145,7 @@ export function getCssString(svgMetadata: SVGMetadata[], options: Options) {
   return css
 }
 
-export async function convert(svgs: Record<string, string>, userOptions: Options = {}) {
+export async function convert(svgs: Omit<SVGMetadata, 'code'>[], userOptions: Options = {}) {
   const options = Object.assign({}, DEFAULT_OPTIONS, userOptions)
   const svgMetadatas = getSvgContext(svgs, options)
   const fontBuffer: FontBuffer = await getFontBuffer(svgMetadatas, options)

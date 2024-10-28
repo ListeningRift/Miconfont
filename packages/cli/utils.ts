@@ -8,12 +8,15 @@ export type Options = ConvertOptions & {
 }
 
 export function getAllSvgs(input: string) {
-  const res: Record<string, string> = {}
-  readdirSync(resolve(input)).forEach((file) => {
-    if (extname(file) === '.svg')
-      res[basename(file, '.svg')] = readFileSync(join(input, file), 'utf-8')
-  })
-  return res
+  return readdirSync(resolve(input)).map((file) => {
+    if (extname(file) === '.svg') {
+      return {
+        name: basename(file, '.svg'),
+        content: readFileSync(join(input, file), 'utf-8'),
+      }
+    }
+    return undefined
+  }).filter(item => item) as { name: string, content: string }[]
 }
 
 export async function writeFontFile(fontBuffer: FontBuffer, options: Options) {
