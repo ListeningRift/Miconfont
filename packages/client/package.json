@@ -1,0 +1,29 @@
+{
+  "name": "@miconfont/client",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.0.2",
+  "description": "Convert SVG icons to TTF and WOFF/WOFF2 formats",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:watch": "vite build --watch"
+  },
+  "dependencies": {
+    "ant-design-vue": "^4.2.5",
+    "use-dialog-vue3": "^0.0.4",
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@miconfont/convert": "workspace:*",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "unocss": "^0.63.6",
+    "vite": "^5.4.10",
+    "vue-tsc": "^2.1.6"
+  }
+}

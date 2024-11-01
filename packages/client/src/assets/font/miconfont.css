@@ -1,0 +1,16 @@
+@font-face {
+  font-family: "miconfont";
+  src: url('miconfont.woff2') format('woff2'),
+       url('miconfont.woff') format('woff'),
+       url('miconfont.ttf') format('truetype');
+}
+
+.miconfont {
+  font-family: "miconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-copy::before { content: "\E600"; }

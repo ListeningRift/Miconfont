@@ -1,0 +1,31 @@
+{
+  "name": "@miconfont/server",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.0.2",
+  "description": "Convert SVG icons to TTF and WOFF/WOFF2 formats",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "esno ./src/index.ts",
+    "dev": "esno watch --include \"./src/*\" ./src/index.ts"
+  },
+  "dependencies": {
+    "@fastify/static": "^8.0.2",
+    "@miconfont/convert": "workspace:*",
+    "archiver": "^7.0.1",
+    "fastify": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.3"
+  }
+}

@@ -19,26 +19,34 @@
   "scripts": {
     "prepare": "simple-git-hooks",
     "cli": "esno packages/cli/index.ts",
+    "server": "pnpm --filter @miconfont/server start",
+    "dev:client": "pnpm --filter @miconfont/client dev",
+    "dev:server": "pnpm --filter @miconfont/server dev",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "build:all": "pnpm -r run build",
+    "build:client": "pnpm --filter @miconfont/client build",
+    "build:watch:client": "pnpm --filter @miconfont/client build:watch",
     "postinstall": "pnpm run build:all",
     "prepublishOnly": "pnpm run build:all",
     "release": "bumpp && npm publish"
   },
   "dependencies": {
     "@miconfont/cli": "workspace:*",
-    "@miconfont/convert": "workspace:*"
+    "@miconfont/client": "workspace:*",
+    "@miconfont/convert": "workspace:*",
+    "@miconfont/server": "workspace:*"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
     "@types/node": "^20.12.7",
     "bumpp": "^9.4.0",
+    "chokidar": "^4.0.1",
     "eslint": "^9.13.0",
     "esno": "^4.7.0",
     "lint-staged": "^15.2.2",
     "pnpm": "^9.0.2",
-    "rimraf": "^5.0.5",
+    "rimraf": "^5.0.10",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
