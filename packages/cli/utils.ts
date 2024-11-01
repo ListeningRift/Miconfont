@@ -1,8 +1,8 @@
-import type { Options as ConvertOptions, FontBuffer } from '@miconfont/convert'
+import type { FontOptions as ConvertFontOptions, FontBuffer } from '@miconfont/convert'
 import { readdirSync, readFileSync, writeFile } from 'node:fs'
 import { basename, extname, join, resolve } from 'node:path'
 
-export type Options = ConvertOptions & {
+export type FontOptions = ConvertFontOptions & {
   output: string
   input: string
 }
@@ -19,7 +19,7 @@ export function getAllSvgs(input: string) {
   }).filter(item => item) as { name: string, content: string }[]
 }
 
-export async function writeFontFile(fontBuffer: FontBuffer, options: Options) {
+export async function writeFontFile(fontBuffer: FontBuffer, options: FontOptions) {
   if (options.formats?.includes('ttf')) {
     writeFile(`${options.output}/${options.name}.ttf`, fontBuffer.ttf, (err) => {
       if (err)
@@ -46,7 +46,7 @@ export async function writeFontFile(fontBuffer: FontBuffer, options: Options) {
   }
 }
 
-export async function writeCSSFile(cssString: string, options: Options) {
+export async function writeCSSFile(cssString: string, options: FontOptions) {
   writeFile(resolve(`${options.output}/${options.name}.css`), cssString, (err) => {
     if (err)
       return console.error(err)

@@ -1,83 +1,15 @@
-import type { Options } from './options'
+import type { FontOptions } from './options'
+import type { FontBuffer, Metadata, SVGMetadata } from './utils'
 import { Buffer } from 'node:buffer'
 import { Readable } from 'node:stream'
 import svg2ttf from 'svg2ttf'
 import { SVGIcons2SVGFontStream } from 'svgicons2svgfont'
-import { optimize } from 'svgo'
 import ttf2woff from 'ttf2woff'
 import ttf2woff2 from 'ttf2woff2'
-import { DEFAULT_OPTIONS } from './options'
+import { DEFAULT_FONT_OPTIONS } from './options'
+import { CONTENT_PREFIX, getSvgContext, optimizeSvgString } from './utils'
 
-const CONTENT_PREFIX = '\\'
-
-interface Metadata {
-  unicode: string[]
-  name: string
-  renamed: false
-}
-
-export interface SVGMetadata {
-  code: number
-  name: string
-  content: string
-}
-
-export interface FontBuffer {
-  woff: Buffer
-  woff2: Buffer
-  ttf: Buffer
-}
-
-export function getSvgContext(svgs: Omit<SVGMetadata, 'code'>[], options: Options) {
-  const svgMetadata: SVGMetadata[] = []
-  svgs.forEach((item, index) => {
-    const code = options.codeStarter! + index
-    svgMetadata.push({
-      code,
-      name: item.name,
-      content: item.content,
-    })
-  })
-  return svgMetadata
-}
-
-function optimizeSvgString(svg: string, clearColor: boolean) {
-  const { data } = optimize(svg, {
-    plugins: [
-      {
-        name: 'preset-default',
-        params: {
-          overrides: {
-            removeViewBox: false,
-          },
-        },
-      },
-      ...(
-        clearColor
-          ? [{
-              name: 'clearSvgColor',
-              fn: () => {
-                return {
-                  element: {
-                    enter: (node: any) => {
-                      const colorRegex = /#(?:[0-9a-fA-F]{3}){1,2}|rgb\(\d+,\s*\d+,\s*\d+\)|rgba\(\d+,\s*\d+,\s*\d+,\s*[\d.]+\)|hsl\(\d+,\s*\d+%,\s*\d+%\)|hsla\(\d+,\s*\d+%,\s*\d+%,\s*[\d.]+\)/g
-                      Object.entries(node.attributes)
-                        .filter(([, value]) => colorRegex.test(value as string))
-                        .forEach(([key]) => {
-                          node.attributes[key] = 'currentColor'
-                        })
-                    },
-                  },
-                }
-              },
-            }]
-          : []),
-    ],
-  })
-  return data
-}
-
-async function generateSvgFontBuffer(svgMetadata: SVGMetadata[], options: Options) {
+async function generateSvgFontBuffer(svgMetadata: SVGMetadata[], options: FontOptions) {
   const fontStream = new SVGIcons2SVGFontStream({
     fontName: options.name, // 字体名称
     log() { },
@@ -109,7 +41,7 @@ async function generateSvgFontBuffer(svgMetadata: SVGMetadata[], options: Option
   })
 }
 
-export async function getFontBuffer(svgMetadata: SVGMetadata[], options: Options) {
+export async function getFontBuffer(svgMetadata: SVGMetadata[], options: FontOptions) {
   const svgBuffer = await generateSvgFontBuffer(svgMetadata, options)
   const ttfUint8Array = svg2ttf(svgBuffer).buffer
   const ttfBuffer = Buffer.from(ttfUint8Array)
@@ -121,7 +53,7 @@ export async function getFontBuffer(svgMetadata: SVGMetadata[], options: Options
   }
 }
 
-export function getCssString(svgMetadata: SVGMetadata[], options: Options) {
+export function getCssString(svgMetadata: SVGMetadata[], options: FontOptions) {
   let css = `@font-face {
   font-family: "${options.name}";
   src: url('${options.name}.woff2') format('woff2'),
@@ -145,8 +77,8 @@ export function getCssString(svgMetadata: SVGMetadata[], options: Options) {
   return css
 }
 
-export async function convert(svgs: Omit<SVGMetadata, 'code'>[], userOptions: Options = {}) {
-  const options = Object.assign({}, DEFAULT_OPTIONS, userOptions)
+export async function convertFont(svgs: Omit<SVGMetadata, 'code'>[], userOptions: FontOptions = {}) {
+  const options = Object.assign({}, DEFAULT_FONT_OPTIONS, userOptions)
   const svgMetadatas = getSvgContext(svgs, options)
   const fontBuffer: FontBuffer = await getFontBuffer(svgMetadatas, options)
   const cssString = getCssString(svgMetadatas, options)

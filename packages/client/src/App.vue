@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { Options } from '@miconfont/convert'
+import type { FontOptions } from '@miconfont/convert'
 import type { UnwrapRef } from 'vue'
 import { Button as AButton, message } from 'ant-design-vue'
 import { useDialog } from 'use-dialog-vue3'
 import { onMounted, ref } from 'vue'
 import SettingsDialog from './components/settingsDialog.vue'
 
-const options = ref<Options & { inputPath: string, configPath: string, mode: 'form' | 'file' }>({
+const options = ref<FontOptions & { inputPath: string, configPath: string, mode: 'form' | 'file' }>({
   inputPath: '',
   mode: 'form',
   configPath: '',

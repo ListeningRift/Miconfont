@@ -1,3 +1,3 @@
-export { convert, getCssString, getFontBuffer } from './convert'
-export type { FontBuffer, SVGMetadata } from './convert'
-export type { Options } from './options'
+export { convertFont, getCssString, getFontBuffer } from './convertFont'
+export type { FontOptions } from './options'
+export type { FontBuffer, SVGMetadata } from './utils'

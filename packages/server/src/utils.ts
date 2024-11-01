@@ -1,4 +1,4 @@
-import type { Options } from '@miconfont/convert'
+import type { FontOptions } from '@miconfont/convert'
 import { readFileSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 import { basename, extname, join, resolve } from 'node:path'
@@ -23,6 +23,6 @@ export async function importRootFile(fileName: string) {
 }
 
 /** 导入配置项 */
-export async function importConfig(): Promise<Options> {
+export async function importConfig(): Promise<FontOptions> {
   return importRootFile('config.json')
 }

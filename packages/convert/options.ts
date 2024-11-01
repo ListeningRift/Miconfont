@@ -1,6 +1,6 @@
 import type { SVGIcons2SVGFontStreamOptions } from 'svgicons2svgfont'
 
-export type Options = {
+export type FontOptions = {
   name?: string
   iconPrefix?: string
   codeStarter?: number
@@ -8,7 +8,7 @@ export type Options = {
   formats?: string[]
 } & Partial<Omit<SVGIcons2SVGFontStreamOptions, 'callback' | 'fontName' | 'log'>>
 
-export const DEFAULT_OPTIONS = {
+export const DEFAULT_FONT_OPTIONS = {
   name: 'iconfont',
   iconPrefix: 'icon',
   formats: ['woff', 'woff2', 'ttf'],

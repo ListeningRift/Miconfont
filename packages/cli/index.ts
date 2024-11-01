@@ -1,8 +1,8 @@
-import type { Options } from './utils'
+import type { FontOptions } from './utils'
 import { stat } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import { convert } from '@miconfont/convert'
+import { convertFont } from '@miconfont/convert'
 import { Command } from 'commander'
 import pkg from './package.json'
 import { getAllSvgs, writeCSSFile, writeFontFile } from './utils'
@@ -48,13 +48,13 @@ program
     catch {
       configOptions = Object.assign({}, omit(userOptions, ['config']))
     }
-    const options: Options = {
+    const options: FontOptions = {
       ...configOptions,
       input: resolve(process.cwd(), configOptions.input),
       output: resolve(process.cwd(), configOptions.output),
     }
     const svgs = getAllSvgs(options.input)
-    const { cssString, fontBuffer } = await convert(svgs, options)
+    const { cssString, fontBuffer } = await convertFont(svgs, options)
     writeCSSFile(cssString, options)
     writeFontFile(fontBuffer, options)
   })
