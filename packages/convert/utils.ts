@@ -75,3 +75,52 @@ export interface SvgComponent {
   name: string
   componentContent: string
 }
+
+function defaultGetVue3ComponentContent(name: string, svgString: string) {
+  return `<template>
+  ${svgString.replace(/<svg.+?>/g, item => `${item.slice(0, item.length - 1)} v-bind="$attrs">`)}
+</template>
+
+<script>
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: '${name}',
+  inheritAttrs: false
+});
+</script>
+`
+}
+
+function defaultGetVue2ComponentContent(name: string, svgString: string) {
+  return `<template>
+  ${svgString.replace(/<svg.+?>/g, item => `${item.slice(0, item.length - 1)} v-bind="$attrs">`)}
+</template>
+
+<script>
+export default {
+  name: '${name}',
+  inheritAttrs: false
+};
+</script>
+`
+}
+
+function defaultGetReactComponentContent(name: string, svgString: string) {
+  return `export interface ${name}Props extends React.SVGAttributes<SVGSVGElement> {}
+
+const ${name} = (props: ${name}Props) => {
+  return (
+    ${svgString.replace(/<svg.+?>/g, item => `${item.slice(0, item.length - 1)} {...props}>`)}
+  );
+};
+
+export default ${name};
+`
+}
+
+export const defaultGetComponentContent = {
+  vue3: defaultGetVue3ComponentContent,
+  vue2: defaultGetVue2ComponentContent,
+  react: defaultGetReactComponentContent,
+}

@@ -13,4 +13,5 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-copy::before { content: "\E600"; }
+.micon-copy::before { content: "\E600"; }
+.micon-hint::before { content: "\E601"; }

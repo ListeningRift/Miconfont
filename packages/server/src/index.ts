@@ -4,10 +4,10 @@ import { dirname, join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import serveStatic from '@fastify/static'
-import { convertFont } from '@miconfont/convert'
+import { convertComponents, convertFont } from '@miconfont/convert'
 import archiver from 'archiver'
 import fastify from 'fastify'
-import { scanSvgFilePaths } from './utils'
+import { getExtname, scanSvgFilePaths } from './utils'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const distPath = join(__dirname, '../..', 'client/dist')
@@ -35,7 +35,7 @@ server.post('/scan', async (request) => {
   }
 })
 
-server.post('/exportFile', async (request, reply) => {
+server.post('/exportFont', async (request, reply) => {
   const iconList = await scanSvgFilePaths((request.body as any).inputPath)
   const font = await convertFont(iconList, request.body as any)
 
@@ -48,12 +48,44 @@ server.post('/exportFile', async (request, reply) => {
   archive.append(font.fontBuffer.woff2, { name: `${(request.body as FontOptions).name}.woff2` })
   archive.append(font.cssString, { name: `${(request.body as FontOptions).name}.css` })
 
-  reply.header('Content-Type', 'application/zip')
-  reply.header('Content-Disposition', `attachment; filename=${(request.body as FontOptions).name}.zip`)
+  reply.raw.setHeader('Content-Type', 'application/zip')
+  reply.raw.setHeader('Content-Disposition', `attachment; filename=${(request.body as FontOptions).name}.zip`)
+
   archive.pipe(reply.raw)
   archive.finalize()
+
   archive.on('finish', () => {
     reply.raw.end()
+  })
+  archive.on('error', () => {
+    reply.code(500).send({ error: 'Failed to generate ZIP archive' })
+  })
+})
+
+server.post('/exportComponent', async (request, reply) => {
+  const options = request.body as any
+  const iconList = await scanSvgFilePaths(options.inputPath)
+  const components = await convertComponents(iconList, options)
+  const ext = options.extname || getExtname(options.framework)
+
+  const archive = archiver('zip', {
+    zlib: { level: 9 },
+  })
+  components.forEach((component) => {
+    archive.append(component.componentContent, { name: `${component.name}.${ext}` })
+  })
+
+  reply.raw.setHeader('Content-Type', 'application/zip')
+  reply.raw.setHeader('Content-Disposition', `attachment; filename=components.zip`)
+
+  archive.pipe(reply.raw)
+  archive.finalize()
+
+  archive.on('finish', () => {
+    reply.raw.end()
+  })
+  archive.on('error', () => {
+    reply.code(500).send({ error: 'Failed to generate ZIP archive' })
   })
 })
 

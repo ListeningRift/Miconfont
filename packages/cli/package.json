@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@miconfont/convert": "workspace:*",
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "mkdirp": "^3.0.1"
   }
 }

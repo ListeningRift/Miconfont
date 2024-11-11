@@ -1,3 +1,4 @@
+export { convertComponents } from './convertComponent'
 export { convertFont, getCssString, getFontBuffer } from './convertFont'
-export type { FontOptions } from './options'
-export type { FontBuffer, SVGMetadata } from './utils'
+export type { ComponentOptions, FontOptions } from './options'
+export type { FontBuffer, SvgComponent, SVGMetadata } from './utils'

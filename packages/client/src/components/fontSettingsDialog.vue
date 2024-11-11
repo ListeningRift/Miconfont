@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { FontOptions } from '@miconfont/convert'
 import type { Rule } from 'ant-design-vue/es/form'
+import type { FontOptions } from '../utils'
 import { Form as AForm, FormItem as AFormItem, Input as AInput, Modal as AModal, Radio as ARadio, RadioGroup as ARadioGroup, Switch as ASwitch } from 'ant-design-vue'
 import { useDialog } from 'use-dialog-vue3'
 import { ref } from 'vue'
 
 const props = defineProps<{
-  options: FontOptions & { inputPath: string, configPath: string, mode: 'form' | 'file' }
+  options: FontOptions
 }>()
 
 const { visible, close, dismiss } = useDialog()
 
-const optionsForm = ref<FontOptions & { inputPath: string, configPath: string, mode: 'form' | 'file' }>(props.options)
+const optionsForm = ref<FontOptions>(props.options)
 
 const rules: Record<string, Rule[]> = {
   inputPath: [

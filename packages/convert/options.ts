@@ -17,3 +17,15 @@ export const DEFAULT_FONT_OPTIONS = {
   fontHeight: 1000,
   normalize: true,
 }
+
+export interface ComponentOptions {
+  clearColor?: boolean
+  framework?: 'react' | 'vue3' | 'vue2'
+  template?: string
+  getComponentContent?: (name: string, svgString: string) => string
+}
+
+export const DEFAULT_COMPONENT_OPTIONS: ComponentOptions = {
+  clearColor: true,
+  framework: 'vue3',
+}

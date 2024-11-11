@@ -26,3 +26,12 @@ export async function importRootFile(fileName: string) {
 export async function importConfig(): Promise<FontOptions> {
   return importRootFile('config.json')
 }
+
+export function getExtname(framework: 'react' | 'vue2' | 'vue3') {
+  if (framework === 'react') {
+    return 'tsx'
+  }
+  else {
+    return 'vue'
+  }
+}
