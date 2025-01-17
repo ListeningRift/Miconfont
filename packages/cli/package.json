@@ -1,7 +1,7 @@
 {
   "name": "@miconfont/cli",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": false,
   "packageManager": "pnpm@9.0.2",
   "description": "A cli for converting SVG icons to TTF and WOFF/WOFF2 formats",
